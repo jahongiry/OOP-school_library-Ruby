@@ -1,4 +1,5 @@
 require './person'
+require_relative './classroom'
 
 class Student < Person
   attr_reader :classroom, :parent_permission, :name, :age
@@ -9,6 +10,11 @@ class Student < Person
   end
 
   def play_hooky
-    "¯\(ツ)/¯"
+    '¯\(ツ)/¯'
+  end
+
+  def classroom=(classroom)
+    @classroom = classroom
+    classroom.students.push(self) unless classroom.students.include?(self)
   end
 end
