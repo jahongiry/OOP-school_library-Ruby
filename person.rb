@@ -4,15 +4,15 @@ require './decorator'
 require_relative 'rental'
 
 class Person < Nameable
-  attr_reader :id
+  attr_reader :id, :parent_permission
   attr_accessor :name, :age, :rentals
 
-  def initialize(age, name = 'Unknown', parent_permission: true)
+  def initialize(age:, **kwargs)
     super()
-    @id = SecureRandom.uuid
-    @name = name
+    @id ||= rand(1..500)
+    @name = 'Unknown' if kwargs[:name].length.zero?
     @age = age
-    @parent_permission = parent_permission
+    @parent_permission = kwargs[:parent_permission]
     @rentals = []
   end
 
