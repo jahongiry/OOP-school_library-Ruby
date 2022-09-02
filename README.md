@@ -39,4 +39,4 @@ Give a ⭐️ if you like this project!
 
 ## 📝 License
 
-This project is MIT licensed.
+This project is [MIT](https://github.com/jahongiry/OOP-school_library-Ruby/blob/setup-association/LICENSE)  licensed.
