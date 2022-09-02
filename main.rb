@@ -1,133 +1,57 @@
-#!/usr/bin/env ruby
-
 require_relative 'app'
 
-class Main < App
-  WRONG_OPTION = 'Wrong Option'.freeze
-  def menu_create_person_type
-    puts <<~MENU
-      ########################
-      1) Student
-      2) Teacher
-      ########################
-    MENU
-    printf 'Choose an option = '
-    opti = gets.chomp.to_i
+class Main
+  def initialize
+    @app = App.new
+  end
 
-    case opti
+  def display_list
+    puts "
+    Please choose an option by entering a number:
+    1- List all books.
+    2- List all people.
+    3- Create a person (teacher or student, not a plain Person).
+    4- Create a book.
+    5- Create a rental.
+    6- List all rentals for a given person id.
+    7- Exit"
+  end
+
+  def execute_option(option)
+    case option
     when 1
-      menu_create_person('Student')
+      @app.list_all_books
     when 2
-      menu_create_person('Teacher')
-    else
-      puts WRONG_OPTION
-      run
-    end
-  end
-
-  def check_permissions(age)
-    age_num = age.to_i
-    return true if age_num >= 18
-
-    printf "\nHas parent permissions? (Y/N) = "
-    answer = gets.chomp.downcase
-
-    answer == 'y' || answer.empty?
-  end
-
-  def menu_create_person(type)
-    printf 'Age* = '
-    age = gets.chomp
-    if type == 'Teacher'
-      printf "\nSpecjalization* = "
-      specialization = gets.chomp
-    end
-    printf "\nName = "
-    name = gets.chomp
-    age.empty? && run
-    permissions = check_permissions(age)
-    case type
-    when 'Teacher'
-      specialization.empty? && run
-      create_teacher(specialization:, age:, name:, parent_permission: permissions)
-    when 'Student'
-      create_student(age:, name:, parent_permission: permissions)
-    else
-      go_back_or_exit
-    end
-  end
-
-  def menu_create_book
-    puts "\nAdd book:\n\n"
-    printf 'Title = '
-    title = gets.chomp
-    printf "\nAuthor = "
-    author = gets.chomp
-
-    (title.empty? || author.empty?) && run
-
-    create_book(title, author)
-  end
-
-  def run
-    puts <<~MENU
-      ########################
-      1) List all books
-      2) List all people
-      3) Create a person
-      4) Create a book
-      5) Create a rental
-      6) List all rentals for a person
-      7) Exit
-      ########################
-    MENU
-    printf 'Choose an option = '
-    opti = gets.chomp.to_i
-    run_start_options(opti)
-  end
-
-  def menu_create_rental
-    list_people(exit: false)
-    printf "\nChoose a person by index number = "
-    person_index = gets.chomp.to_i - 1
-
-    list_books(exit: false)
-    printf "\nChoose a book by index number = "
-    book_index = gets.chomp.to_i - 1
-
-    printf "\nRental Date = "
-    date = gets.chomp
-
-    (date == '' || person_index == -1 || book_index == -1) && run
-    create_rental(date:, book: book_index, person: person_index)
-  end
-
-  def menu_list_rentals
-    printf "\nPerson ID = "
-
-    id = gets.chomp.to_i
-    list_all_rentals(id)
-  end
-
-  def run_start_options(opti)
-    case opti
-    when 1
-      list_books
-    when 2
-      list_people
+      @app.list_all_people
     when 3
-      menu_create_person_type
+      @app.create_person
     when 4
-      menu_create_book
+      @app.create_book
     when 5
-      menu_create_rental
+      @app.create_rental
     when 6
-      menu_list_rentals
+      @app.display_rentals_by_person_id
     else
-      puts 'Exiting...'
-      exit!
+      puts 'Not a valid option'
     end
+  end
+
+  def choose_option
+    loop do
+      display_list
+      option = gets.chomp.to_i
+      break if option == 7
+
+      execute_option(option)
+    end
+  end
+
+  def main
+    puts 'Welcome to School library app!'
+    choose_option
+    puts 'Thank you for using School library app!'
   end
 end
 
-Main.new.run
+main = Main.new
+main.main
