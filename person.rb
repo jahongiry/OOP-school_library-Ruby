@@ -1,31 +1,29 @@
-require 'securerandom'
-require './nameable'
-require './decorator'
-require_relative 'rental'
+require_relative 'nameable'
 
 class Person < Nameable
-  attr_reader :id, :parent_permission
-  attr_accessor :name, :age, :rentals
+  attr_reader :id, :rentals
+  attr_accessor :age, :name
 
-  def initialize(age:, **kwargs)
+  def initialize(age, name = 'Unknown', parent_permission: true)
     super()
-    @id ||= rand(1..500)
-    @name = 'Unknown' if kwargs[:name].length.zero?
+    @id = Random.rand(1..500)
+    @name = name
     @age = age
-    @parent_permission = kwargs[:parent_permission]
+    @parent_permission = parent_permission
     @rentals = []
   end
 
   def can_use_services?
-    of_age? && @parent_permission
+    of_age? || @parent_permission
   end
 
   def correct_name
     @name
   end
 
-  def add_rental(date, book)
-    Rental.new(date, book, self)
+  def add_rental(rental)
+    @rentals.push(rental) unless @rentals.include?(rental)
+    rental.person = self
   end
 
   private
