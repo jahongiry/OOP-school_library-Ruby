@@ -1,4 +1,4 @@
-Module Options
+module Options
    def display_list
     puts "
     Please choose an option by entering a number:
@@ -10,5 +10,4 @@ Module Options
     6- List all rentals for a given person id.
     7- Exit"
   end
-
 end
